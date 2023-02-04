@@ -24,7 +24,6 @@ func main() {
 		ip, ipNet, _ := net.ParseCIDR(scanner.Text())
 		ones, bits := ipNet.Mask.Size()
 		wg.Add(1 << uint(bits-ones))
-		fmt.Println("Scanning network", ipNet)
 		for ip := ip.Mask(ipNet.Mask); ipNet.Contains(ip); inc(ip) {
 			go scanHost(net.JoinHostPort(ip.String(), port), &wg)
 		}
@@ -50,7 +49,7 @@ func scanHost(address string, wg *sync.WaitGroup) {
 	conn, err := net.DialTimeout("tcp", address, 500*time.Millisecond)
 	if err == nil && conn != nil {
 		defer conn.Close()
-		fmt.Println("	Found listening :", address)
+		fmt.Println(address)
 	}
 }
 
